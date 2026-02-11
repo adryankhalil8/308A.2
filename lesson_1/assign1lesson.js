@@ -2,23 +2,23 @@
  * PART 1: Stack Overflow Measurement
  *************************************************/
 
-let counter = 0;
+// let counter = 0;
 
-function overflowTest() {
-  counter++;
-  overflowTest();
-}
+// function overflowTest() {
+//   counter++;
+//   overflowTest();
+// }
 
-function runPart1() {
-  try {
-    overflowTest();
-  } catch (error) {
-    console.error("Part 1 Error:", error.message);
-    console.log("Call stack size reached:", counter);
-  }
-}
+// function runPart1() {
+//   try {
+//     overflowTest();
+//   } catch (error) {
+//     console.error("Part 1 Error:", error.message);
+//     console.log("Call stack size reached:", counter);
+//   }
+// }
 
-// runPart1(); // ← uncomment when testing Part 1
+ // runPart1(); // ← uncomment when testing Part 1
 
 
 
@@ -26,32 +26,32 @@ function runPart1() {
  * PART 2: Trampolined Array Flattening
  *************************************************/
 
-function trampoline(fn) {
-  let result = fn();
-  while (typeof result === "function") {
-    result = result();
-  }
-  return result;
-}
 
-function flattenArray(arr, result = []) {
-  if (arr.length === 0) return result;
 
-  const [first, ...rest] = arr;
+// function flattenArray(arr, result = []) {
+//   if (arr.length === 0) return result;
 
-  if (Array.isArray(first)) {
-    return () => flattenArray(first.concat(rest), result);
-  } else {
-    result.push(first);
-    return () => flattenArray(rest, result);
-  }
-}
+//   const [first, ...rest] = arr;
 
-function runPart2() {
-  const nested = [1, [2, [3, [4, [5]]]], 6];
-  const flattened = trampoline(() => flattenArray(nested));
-  console.log("Part 2 Result:", flattened);
-}
+//   if (Array.isArray(first)) {
+//     return () => flattenArray(first.concat(rest), result);
+//   } else {
+//     result.push(first);
+//     return () => flattenArray(rest, result);
+//   }
+// }
+// function trampoline(fn) {
+//   let result = fn();
+//   while (typeof result === "function") {
+//     result = result();
+//   }
+//   return result;
+// }
+// function runPart2() {
+//   const nested = [1, [2, [3, [4, [5]]]], 6];
+//   const flattened = trampoline(() => flattenArray(nested));
+//   console.log("Part 2 Result:", flattened);
+// }
 
 // runPart2(); // ← uncomment when testing Part 2
 
@@ -62,8 +62,9 @@ function runPart2() {
  *************************************************/
 
 // ⚠️ This part requires a browser + HTML element
-function runPart3() {
-  const output = document.getElementById("output");
+// const output = document.getElementById("output");
+ function runPart3() {
+  
 
   function isPrime(num) {
     if (num < 2) return false;

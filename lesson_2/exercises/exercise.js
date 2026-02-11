@@ -14,14 +14,13 @@
 // Exercise 1: Object Literals Review
 // ------------------------------------------------------------
 // Goal: Refresh object syntax before introducing classes.
-
 const book = {
-  title: "The Great Gatsby",
-  author: "F. Scott Fitzgerald",
-  pages: 180,
-  isRead: false,
-  markAsRead() {
-    this.isRead = true;
+  title: "The Great Gatsby",        // Property: string value
+  author: "F. Scott Fitzgerald",     // Property: string value
+  pages: 180,                         // Property: number value
+  isRead: false,                      // Property: boolean value (mutable)
+  markAsRead() {                      // Shorthand method syntax (same as markAsRead: function() {})
+    this.isRead = true;               // `this` refers to the `book` object when called as book.markAsRead()
     console.log(`${this.title} has been marked as read.`);
   },
   summary() {
@@ -29,132 +28,142 @@ const book = {
   },
 };
 
-// TODO 1: Log the book's title and author.
-console.log(book.title);
-console.log(book.author);
+// 1. Log the book's title and author
+console.log(book.title);   // "The Great Gatsby"
+console.log(book.author);  // "F. Scott Fitzgerald"
 
-// TODO 2: Call markAsRead() and verify isRead is now true.
+// 2. Call markAsRead() and verify isRead is now true
 book.markAsRead();
-console.log(book.isRead);
+console.log(book.isRead);  // true
 
-// TODO 3: Add a summary() method that returns
-//         "The Great Gatsby by F. Scott Fitzgerald, 180 pages"
-console.log(book.isRead);
-
+// 3. summary() method
+console.log(book.summary()); // "The Great Gatsby by F. Scott Fitzgerald, 180 pages"
 
 
 // ------------------------------------------------------------
 // Exercise 2: The `this` Keyword
 // ------------------------------------------------------------
-// Goal: Understand how `this` references the owning object.
 
 const dog = {
   name: "Buddy",
   breed: "Golden Retriever",
   tricks: ["sit", "shake", "roll over"],
   showTricks() {
+    // `this` refers to `dog` because showTricks is called as dog.showTricks()
     console.log(`${this.name} can do: ${this.tricks.join(", ")}`);
   },
 };
 
-// TODO 1: Call dog.showTricks().
-dog.showTricks(); 
+// 1. Call dog.showTricks()
+dog.showTricks(); // "Buddy can do: sit, shake, roll over"
 
-// TODO 2: Create a standalone function greet() that uses this.name.
+// 2. Standalone function that uses this.name
 function greet() {
   console.log(`Hi, my name is ${this.name}`); // `this` depends on HOW greet() is called
 }
 
+// 3. Assign to dog and call — it works because `this` now refers to dog
+dog.greet = greet;   // Attach the function as a method on the dog object
+dog.greet();         // "Hi, my name is Buddy" — called as dog.greet(), so this === dog
 
-// TODO 3: Assign greet to dog.greet and call it — does it work?
-dog.greet = greet;
-dog.greet();
-
-// TODO 4: Call greet() alone — what happens and why?
-//         Will be undefined 
+// 4. Call greet() alone
+// greet(); // `this` is undefined (strict mode) or the global object.
+// In Node.js, this.name is undefined. In a browser, it may reference
+// window.name. This demonstrates that `this` depends on HOW a function
+// is called, not WHERE it's defined.
 
 
 // ------------------------------------------------------------
 // Exercise 3: Your First Class
 // ------------------------------------------------------------
-// Goal: Define and instantiate a basic class.
 
 class Pet {
-  constructor(name, species) {
-    this.name = name;
-    this.species = species;
-    this.isHungry = true;
+  constructor(name, species) {    // constructor runs automatically when you call `new Pet(...)`
+    this.name = name;             // `this` refers to the NEW object being created
+    this.species = species;       // Assign each parameter as a property on the instance
+    this.isHungry = true;         // Default value — every new Pet starts hungry
   }
 
-  feed() {
-    this.isHungry = false;
+  feed() {                        // Instance method — shared via Pet.prototype
+    this.isHungry = false;        // Mutate the instance's own property
     console.log(`${this.name} has been fed!`);
+  }
+
+  describe() {
+    console.log(`${this.name} is a ${this.species}`);
   }
 }
 
-// TODO 1: Create 3 different pets using the Pet class.
+// 1. Create 3 different pets
 const pet1 = new Pet("Buddy", "Dog");
 const pet2 = new Pet("Whiskers", "Cat");
-const pet3 = new Pet("Nemo","Fish");
+const pet3 = new Pet("Nemo", "Fish");
 
-// TODO 2: Feed one of them and verify isHungry changed.
-pet1.feed();
-console.log(pet1.isHungry);
-console.log(pet2.isHungry);
+// 2. Feed one and verify isHungry changed
+pet1.feed();                  // "Buddy has been fed!"
+console.log(pet1.isHungry);  // false
+console.log(pet2.isHungry);  // true (unfed)
 
-// TODO 3: Add a describe() method to Pet that logs
-//         "Buddy is a Dog" (using the instance's name and species).
+// 3. describe() method
+pet1.describe(); // "Buddy is a Dog"
+pet3.describe(); // "Nemo is a Fish"
 
 
 // ------------------------------------------------------------
 // Exercise 4: Constructor Practice
 // ------------------------------------------------------------
-// Goal: Practice passing different arguments to constructors.
 
 class Rectangle {
   constructor(width, height) {
-    this.width = width;
+    this.width = width;                 // Store dimensions as instance properties
     this.height = height;
   }
 
   area() {
-    return this.width * this.height;
+    return this.width * this.height;    // width × height = area
   }
 
   perimeter() {
-    return 2 * (this.width + this.height);
+    return 2 * (this.width + this.height); // 2 × (w + h) = perimeter
   }
 
   isSquare() {
-    return this.width === this.height;
+    return this.width === this.height;  // A square is a rectangle with equal sides
+  }
+
+  describe() {
+    return `Rectangle: ${this.width}×${this.height}, Area: ${this.area()}`;
+    // Calls this.area() — methods can call other methods on the same instance
   }
 }
 
-// TODO 1: Create a 5×10 rectangle and log its area and perimeter.
+// 1. 5×10 rectangle
+const rect1 = new Rectangle(5, 10);
+console.log(rect1.area());       // 50
+console.log(rect1.perimeter());  // 30
 
+// 2. 7×7 rectangle
+const rect2 = new Rectangle(7, 7);
+console.log(rect2.isSquare());   // true
 
-// TODO 2: Create a 7×7 rectangle and verify isSquare() returns true.
-
-
-// TODO 3: Add a describe() method that returns
-//         "Rectangle: 5×10, Area: 50"
+// 3. describe() method
+console.log(rect1.describe()); // "Rectangle: 5×10, Area: 50"
 
 
 // ------------------------------------------------------------
 // Exercise 5: Inheritance Basics
 // ------------------------------------------------------------
-// Goal: Use extends and super for the first time.
 
 class Vehicle {
   constructor(make, model, year) {
-    this.make = make;
+    this.make = make;               // Shared properties for all vehicles
     this.model = model;
     this.year = year;
-    this.isRunning = false;
+    this.isRunning = false;         // Default state: engine off
   }
 
   start() {
-    this.isRunning = true;
+    this.isRunning = true;          // Mutate state
     console.log(`${this.make} ${this.model} started!`);
   }
 
@@ -164,13 +173,36 @@ class Vehicle {
   }
 }
 
-// TODO 1: Create a Car class that extends Vehicle and adds numDoors.
+// 1. Car class with numDoors
+class Car extends Vehicle {           // `extends` sets up the prototype chain: Car → Vehicle
+  constructor(make, model, year, numDoors) {
+    super(make, model, year);         // MUST call super() first — it runs Vehicle's constructor
+                                      // to initialize make, model, year, and isRunning
+    this.numDoors = numDoors;         // Then add Car-specific properties
+  }
 
-// TODO 2: Create a Motorcycle class that extends Vehicle and adds hasSidecar.
+  honk() {                            // Car-specific method (not on Vehicle)
+    console.log("Beep beep!");
+  }
+}
 
-// TODO 3: Instantiate one of each and test all methods.
+// 2. Motorcycle class with hasSidecar
+class Motorcycle extends Vehicle {
+  constructor(make, model, year, hasSidecar = false) { // Default parameter: no sidecar
+    super(make, model, year);         // Initialize inherited properties via Vehicle constructor
+    this.hasSidecar = hasSidecar;     // Motorcycle-specific property
+  }
+}
 
-// TODO 4: Add a honk() method to Car that logs "Beep beep!".
+// 3. Instantiate and test
+const myCar = new Car("Toyota", "Camry", 2023, 4);
+myCar.start();  // "Toyota Camry started!"
+myCar.honk();   // "Beep beep!"
+myCar.stop();   // "Toyota Camry stopped."
+
+const myBike = new Motorcycle("Harley", "Sportster", 2022, true);
+myBike.start(); // "Harley Sportster started!"
+myBike.stop();  // "Harley Sportster stopped."
 
 
 // ------------------------------------------------------------
